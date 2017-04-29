@@ -1,0 +1,29 @@
+{
+  "name": "zombie-game",
+  "version": "0.0.1",
+  "description": "zombie-themed html5 game using pixi.js",
+  "main": "game.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinarForge/zombie-game.git"
+  },
+  "keywords": [
+    "html5",
+    "zombie",
+    "game",
+    "browser",
+    "game"
+  ],
+  "author": "binarforge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BinarForge/zombie-game/issues"
+  },
+  "homepage": "https://github.com/BinarForge/zombie-game#readme",
+  "dependencies": {
+    "pixi.js": "^4.5.1"
+  }
+}
