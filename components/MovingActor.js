@@ -12,8 +12,6 @@ function MovingActor(game, x, y, sprite, movingSpeed){
     _game.getStage().addChild(_sprite);
     _game.getStage().addChild(_canvas);
 
-    console.log(_sprite);
-
     var _debug = function(){
         _canvas.clear();
         _canvas.lineStyle(4, 0x00FF00);
