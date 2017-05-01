@@ -4,7 +4,7 @@
   "description": "zombie-themed html5 game using pixi.js",
   "main": "game.js",
   "scripts": {
-    "test": "test"
+    "test": "node node_modules\\mocha\\bin\\mocha ./components"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/BinarForge/zombie-game#readme",
   "dependencies": {
+    "mocha": "^3.3.0",
     "pixi.js": "^4.5.1"
   }
 }
