@@ -1,3 +1,6 @@
+const SpriteFactory = require('./sprite-factory').SpriteFactory;
+
+
 function MovingActor(game, x, y, sprite, movingSpeed){
     var _position = {
         x: x,
