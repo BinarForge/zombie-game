@@ -1,28 +1,20 @@
-function Vector2D(x,y){
-
-    var _x = x | 0;
-    var _y = y | 0;
-
-    var _directionTo = function(otherVector){
-        if(typeof otherVector.x === 'undefined' || typeof otherVector.y === 'undefined')
-            return new Vector2D(0,0);
-
-        return new Vector2D(otherVector.x - _x, otherVector.y - _y);
-    };
-
-    var _magnitude = function(){
-        return Math.sqrt(_x*_x + _y*_y);
-    };
-
-    return {
-        x: _x,
-        y: _y,
-        directionTo: _directionTo,
-        magnitude: _magnitude
+"use strict";
+var Vector2D = (function () {
+    function Vector2D(x, y) {
+        this.x = 0;
+        this.y = 0;
+        this.x = x === null ? 0 : x;
+        this.y = y === null ? 0 : y;
     }
-}
-
-
-module.exports = {
-    Vector2D: Vector2D
-}
+    Vector2D.prototype.directionTo = function (otherVector) {
+        if (!(otherVector instanceof Vector2D))
+            return new Vector2D(0, 0);
+        return new Vector2D(otherVector.x - this.x, otherVector.y - this.y);
+    };
+    Vector2D.prototype.magnitude = function () {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    };
+    ;
+    return Vector2D;
+}());
+exports.Vector2D = Vector2D;

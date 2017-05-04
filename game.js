@@ -1,65 +1,42 @@
-const MovingActor = require('./components/MovingActor').MovingActor;
-const keyboard = require('./components/keyboard').keyboard;
-const SpriteFactory = require('./components/sprite-factory').SpriteFactory;
-
-
-function Game(){
-    var _renderer,
-        _stage;
-
-    var _actors = [];
-    var _player;
-
-    var _onSpace = keyboard(32);
-    _onSpace.press = function(){
-        _player.shoot();
-    };
-
-    var _init = function(gameContainerId, resX, resY){
-        _spawnActor = _spawnActor.bind(this);
-        _getStage = _getStage.bind(this);
-
-        _stage = new PIXI.Container();
-        _renderer = PIXI.autoDetectRenderer(
-            800,
-            600,
-            {view: document.getElementById(gameContainerId)}
-        );
-
-        SpriteFactory.add('zombie', 'resources/zombie.png');
-        SpriteFactory.add('bullet', 'resources/strawberry.png');
-
-        _spawnActor(550, 150, SpriteFactory.for('zombie', -0.25, 0.25), -1);
-        _spawnActor(670, 50, SpriteFactory.for('zombie', -0.25, 0.25), -1.2);
-
-        _player = _spawnActor(70, 250, SpriteFactory.for('zombie', 0.4, 0.4), 0.1);
-
-        _update();
-    };
-
-    var _spawnActor = function(x,y, sprite, speed){
-        var enemy = new MovingActor(this, x,y, sprite, speed);
-        _actors.push(enemy);
+"use strict";
+/// <reference path="node_modules/@types/pixi.js/index.d.ts" />
+var SpriteFactory_1 = require("./components/SpriteFactory");
+var Vector2D_1 = require("./components/Vector2D");
+var MovingActor_1 = require("./components/MovingActor");
+var keyboard_1 = require("./components/keyboard");
+var Game = (function () {
+    function Game(gameContainerId, resX, resY) {
+        this._onSpace = keyboard_1.keyboard(32);
+        this.press = function () {
+            _player.shoot();
+        };
+        this._stage = new PIXI.Container();
+        this._renderer = PIXI.autoDetectRenderer(resX, resY, { view: document.getElementById(gameContainerId) });
+        this._actors = new Array();
+        SpriteFactory_1.SpriteFactory.add('zombie', 'resources/zombie.png');
+        SpriteFactory_1.SpriteFactory.add('bullet', 'resources/strawberry.png');
+        this.spawnActor(550, 150, SpriteFactory_1.SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D_1.Vector2D(-1, 0));
+        this.spawnActor(670, 50, SpriteFactory_1.SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D_1.Vector2D(-1.2, 0));
+        this._player = this.spawnActor(70, 250, SpriteFactory_1.SpriteFactory.for('zombie', 0.4, 0.4), new Vector2D_1.Vector2D(0.1, 0));
+        this.update();
+    }
+    ;
+    Game.prototype.spawnActor = function (x, y, sprite, speed) {
+        var enemy = new MovingActor_1.MovingActor(this, x, y, sprite, speed);
+        this._actors.push(enemy);
         return enemy;
     };
-
-    var _update = function(){
-        _renderer.render(_stage);
-        requestAnimationFrame(_update);
-
-        for(var i=0; i<_actors.length; i++){
-            _actors[i].update();
+    ;
+    Game.prototype.update = function () {
+        this._renderer.render(this._stage);
+        requestAnimationFrame(this.update.bind(this));
+        for (var i = 0; i < this._actors.length; i++) {
+            this._actors[i].update();
         }
     };
-
-    var _getStage = function(){ return _stage; };
-
-    return {
-        init: _init,
-        getStage: _getStage,
-        spawnActor: _spawnActor
-    }
-}
-
-
-new Game().init('game-container', 800,600)
+    ;
+    Game.prototype.getStage = function () { return this._stage; };
+    ;
+    return Game;
+}());
+new Game('game-container', 800, 600);

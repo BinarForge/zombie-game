@@ -8,6 +8,7 @@ describe('Given the 2d vector instance', function(){
         let v = new Vector2D();
 
         it('Its components are equal zero', function(){
+            console.log(22, v);
             assert.ok(0 === v.x && 0 === v.y);
         })
     })
