@@ -2,6 +2,7 @@
 import { SpriteFactory } from './components/SpriteFactory';
 import { Vector2D } from './components/Vector2D';
 import { MovingActor } from './components/MovingActor';
+import { Enemy } from './components/Enemy';
 import { keyboard } from './components/keyboard';
 
 
@@ -25,18 +26,27 @@ class Game{
         SpriteFactory.add('zombie', 'resources/zombie.png');
         SpriteFactory.add('bullet', 'resources/strawberry.png');
 
-        this.spawnActor(550, 150, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1, 0));
-        this.spawnActor(670, 50, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1.2, 0));
+        this.spawnActor('Enemy', 550, 150, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1, 0));
+        this.spawnActor('Enemy',670, 50, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1.2, 0));
 
-        this._player = this.spawnActor(70, 250, SpriteFactory.for('zombie', 0.4, 0.4), new Vector2D(0.1, 0));
+        this._player = this.spawnActor('MovingActor',70, 250, SpriteFactory.for('zombie', 0.4, 0.4), new Vector2D(0.1, 0));
 
         this.update();
     };
 
-    spawnActor(x,y, sprite, speed): MovingActor{
-        var enemy = new MovingActor(this, x,y, sprite, speed);
-        this._actors.push(enemy);
-        return enemy;
+    spawnActor(type: string, x,y, sprite, speed): MovingActor{
+        var actor: MovingActor = null;
+
+        if(type === 'MovingActor')
+            actor = new MovingActor(this, x,y, sprite, speed);
+        else if(type === 'Enemy')
+            actor = new Enemy(this, x,y, sprite, speed);
+
+        if(actor === null)
+            return;
+
+        this._actors.push(actor);
+        return actor;
     };
 
     update(){
@@ -44,7 +54,7 @@ class Game{
         requestAnimationFrame(this.update.bind(this));
 
         for(var i=0; i<this._actors.length; i++){
-            this._actors[i].update();
+            this._actors[i].update(0.05);
         }
     };
 

@@ -36,20 +36,16 @@ export class MovingActor{
     getPosition(){
         return this._position;
     }
-    update(){
+    update(deltaTime: number){
         this._position.x+=this._speed.x;
         this._position.y+=this._speed.y;
 
         this.updateSprite();
-
+        
         this.debug();
     }
     
     updateSprite(){
         this._sprite.position = new PIXI.Point(this._position.x, this._position.y);
-    }
-
-    shoot(){
-        this._game.spawnActor(this._position.x, this._position.y, SpriteFactory.for('bullet', 0.03, 0.03), new Vector2D(this._speed.x*10, 0) );
     }
 }

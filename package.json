@@ -5,7 +5,7 @@
   "main": "game.js",
   "scripts": {
     "test": "node node_modules\\mocha\\bin\\mocha ./test",
-    "bundle": "node node_modules\\webpack\\bin\\webpack.js"
+    "bundle": "tsc && node node_modules\\webpack\\bin\\webpack.js"
   },
   "repository": {
     "type": "git",
