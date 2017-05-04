@@ -14,17 +14,20 @@ export class Enemy extends MovingActor{
     update(deltaTime: number){
         super.update(deltaTime);
 
+        let target = this._game.getPlayer().getPosition();
+        if(this._position.x <= target.x)
+            return;
+
         this.nextShoot -= deltaTime;
 
         if(this.nextShoot <= 0){
-            this.shoot();
+            this.shoot(target);
             this.nextShoot = 1 + Math.random()*3;
         }
     }
 
-    shoot(){
-
-        let direction = this._position.directionTo(this._game.getPlayer().getPosition()).normalized();
+    shoot(target: Vector2D){
+        let direction = this._position.directionTo(target).normalized();
         direction.x *= 2.0;
         direction.y *= 2.0;
 
