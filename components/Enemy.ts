@@ -23,6 +23,11 @@ export class Enemy extends MovingActor{
     }
 
     shoot(){
-        this._game.spawnActor('MovingActor', this._position.x, this._position.y, SpriteFactory.for('bullet', 0.03, 0.03), new Vector2D(this._speed.x*10, 0) );
+
+        let direction = this._position.directionTo(this._game.getPlayer().getPosition()).normalized();
+        direction.x *= 2.0;
+        direction.y *= 2.0;
+
+        this._game.spawnActor('MovingActor', this._position.x, this._position.y, SpriteFactory.for('bullet', 0.03, 0.03), direction);
     }
 }

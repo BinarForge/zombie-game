@@ -1,16 +1,17 @@
 /// <reference path="../node_modules/@types/pixi.js/index.d.ts" />
 import { SpriteFactory } from './SpriteFactory';
 import { Vector2D } from './Vector2D';
+import { Game } from './../Game';
 
 
 export class MovingActor{
     _position: Vector2D;
-    _game: any;
+    _game: Game;
     _sprite: PIXI.Sprite;
     _speed: Vector2D;
     _canvas: PIXI.Graphics;
 
-    constructor(game: any, x: number, y: number, sprite: PIXI.Sprite, movingSpeed: Vector2D){
+    constructor(game: Game, x: number, y: number, sprite: PIXI.Sprite, movingSpeed: Vector2D){
         this._position = new Vector2D(x,y);
         this._game = game;
         this._sprite = sprite;
@@ -41,7 +42,7 @@ export class MovingActor{
         this._position.y+=this._speed.y;
 
         this.updateSprite();
-        
+
         this.debug();
     }
     

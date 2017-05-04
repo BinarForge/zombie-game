@@ -6,9 +6,9 @@ import { Enemy } from './components/Enemy';
 import { keyboard } from './components/keyboard';
 
 
-class Game{
+export class Game{
     _renderer: PIXI.SystemRenderer;
-    _stage: Object;
+    _stage: PIXI.Container;
 
     _actors: MovingActor[];
     _player: MovingActor;
@@ -58,7 +58,11 @@ class Game{
         }
     };
 
-    getStage(){ return this._stage; };
+    getStage(): PIXI.Container { return this._stage; };
+
+    getPlayer(): MovingActor{
+        return this._player;
+    }
 }
 
 
