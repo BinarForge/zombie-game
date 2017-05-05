@@ -13,6 +13,8 @@ export class Game{
     _actors: MovingActor[];
     _player: MovingActor;
     
+    _nextSpawn = 1.0;
+
     constructor(gameContainerId: string, resX: number, resY: number){
         this._stage = new PIXI.Container();
         this._renderer = PIXI.autoDetectRenderer(
@@ -25,9 +27,6 @@ export class Game{
 
         SpriteFactory.add('zombie', 'resources/zombie.png');
         SpriteFactory.add('bullet', 'resources/strawberry.png');
-
-        this.spawnActor('Enemy', 550, 150, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1, 0));
-        this.spawnActor('Enemy',670, 50, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1.2, 0));
 
         this._player = this.spawnActor('MovingActor',70, 250, SpriteFactory.for('zombie', 0.4, 0.4), new Vector2D(0.1, 0));
 
@@ -50,11 +49,19 @@ export class Game{
     };
 
     update(){
+        const deltaTime = 0.05;
+
         this._renderer.render(this._stage);
         requestAnimationFrame(this.update.bind(this));
 
+        this._nextSpawn -= deltaTime;
+        if(this._nextSpawn <= 0.0){
+            this._nextSpawn = 8.0 + Math.random() * 12.0;
+            this.spawnActor('Enemy', this._renderer.width * 1.2, Math.random()*this._renderer.height, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1, 0));
+        }
+
         for(var i=0; i<this._actors.length; i++){
-            this._actors[i].update(0.05);
+            this._actors[i].update(deltaTime);
         }
     };
 

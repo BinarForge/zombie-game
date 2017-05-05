@@ -22,7 +22,7 @@ export class Enemy extends MovingActor{
 
         if(this.nextShoot <= 0){
             this.shoot(target);
-            this.nextShoot = 1 + Math.random()*3;
+            this.nextShoot = 2 + Math.random()*5;
         }
     }
 
