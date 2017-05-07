@@ -6,3 +6,6 @@
 npm i
 npm run bundle
 ```
+
+##### Build available at: #####
+http://dev.binarforge.com/almost-zombie-game/
