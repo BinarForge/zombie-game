@@ -20,6 +20,7 @@ export class Game {
     _keyboard: Keyboard;
 
     _health: PIXI.Text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 16, fill : 0x10ff10, align : 'center'});
+    _info: PIXI.Text = new PIXI.Text('Use arrows & space to avoid and shoot!',{fontFamily : 'Arial', fontSize: 18, fill : 0x1010ff, align : 'center'});
     _gameOver: boolean = false;
 
     constructor(gameContainerId: string, resX: number, resY: number){
@@ -40,8 +41,10 @@ export class Game {
 
         this._player = this.spawnActor('Player',70, 250, SpriteFactory.for('zombie', 0.25, 0.25), new Vector2D(0,0)) as Player;
 
-        this._stage.addChild(this._health);
         this._health.position = new PIXI.Point(50, 50);
+        this._info.position = new PIXI.Point(50, 550);
+        this._stage.addChild(this._health);
+        this._stage.addChild(this._info);
 
         this.update();
     };
