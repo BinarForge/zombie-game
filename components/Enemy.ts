@@ -15,14 +15,14 @@ export class Enemy extends MovingActor{
         super.update(deltaTime);
 
         let target = this._game.getPlayer().getPosition();
-        if(this._position.x <= target.x)
+        if(this._position.x <= target.x + 50)
             return;
 
         this.nextShoot -= deltaTime;
 
         if(this.nextShoot <= 0){
             this.shoot(target);
-            this.nextShoot = 2 + Math.random()*5;
+            this.nextShoot = 3 + Math.random()*8;
         }
     }
 

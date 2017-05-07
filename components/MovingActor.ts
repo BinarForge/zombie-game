@@ -2,6 +2,7 @@
 import { SpriteFactory } from './SpriteFactory';
 import { Vector2D } from './Vector2D';
 import { Game } from './../Game';
+import { Rectangle } from "./Rectangle";
 
 
 export class MovingActor{
@@ -10,6 +11,7 @@ export class MovingActor{
     _sprite: PIXI.Sprite;
     _speed: Vector2D;
     _canvas: PIXI.Graphics;
+    _collisionBox: Rectangle;
 
     constructor(game: Game, x: number, y: number, sprite: PIXI.Sprite, movingSpeed: Vector2D){
         this._position = new Vector2D(x,y);
@@ -22,6 +24,8 @@ export class MovingActor{
 
         this._game.getStage().addChild(this._sprite);
         this._game.getStage().addChild(this._canvas);
+
+        this._collisionBox = new Rectangle(this._position.x, this._position.y, this._sprite.width, this._sprite.height);
     }
 
     protected debug(){
@@ -41,6 +45,7 @@ export class MovingActor{
         this._position.x+=this._speed.x;
         this._position.y+=this._speed.y;
 
+        this.updateRectangle();
         this.updateSprite();
 
         this.debug();
@@ -53,5 +58,25 @@ export class MovingActor{
     
     updateSprite(){
         this._sprite.position = new PIXI.Point(this._position.x, this._position.y);
+    }
+
+    updateRectangle(){
+        this._collisionBox.x = this._position.x;
+        this._collisionBox.y = this._position.y;
+        this._collisionBox.w = this._sprite.width;
+        this._collisionBox.h = this._sprite.height;
+    }
+
+    getCollision(): Rectangle{
+        return this._collisionBox;
+    }
+
+    collidesWith(otherActor: MovingActor): boolean{
+        return otherActor.getCollision().overlaps(this._collisionBox);
+    }
+
+    destroy(){
+        this._sprite.destroy();
+        this._canvas.destroy();
     }
 }

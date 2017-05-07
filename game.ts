@@ -4,6 +4,7 @@ import { Vector2D } from './components/Vector2D';
 import { MovingActor } from './components/MovingActor';
 import { Enemy } from './components/Enemy';
 import { Keyboard } from './components/Keyboard';
+import { Player } from "./components/Player";
 
 
 export class Game{
@@ -11,7 +12,7 @@ export class Game{
     _stage: PIXI.Container;
 
     _actors: MovingActor[];
-    _player: MovingActor;
+    _player: Player;
     
     _nextSpawn = 1.0;
     _keyboard: Keyboard;
@@ -29,9 +30,10 @@ export class Game{
         this._actors = new Array<MovingActor>();
 
         SpriteFactory.add('zombie', 'resources/zombie.png');
+        SpriteFactory.add('soldier', 'resources/soldier.png');
         SpriteFactory.add('bullet', 'resources/strawberry.png');
 
-        this._player = this.spawnActor('MovingActor',70, 250, SpriteFactory.for('zombie', 0.4, 0.4), new Vector2D(0.1, 0));
+        this._player = this.spawnActor('Player',70, 250, SpriteFactory.for('zombie', 0.25, 0.25), new Vector2D(0,0)) as Player;
 
         this.update();
     };
@@ -42,7 +44,10 @@ export class Game{
         if(type === 'MovingActor')
             actor = new MovingActor(this, x,y, sprite, speed);
         else if(type === 'Enemy')
-            actor = new Enemy(this, x,y, sprite, speed);
+            actor = new Enemy(this, x,y, sprite, speed);    
+        else if(type === 'Player')
+            actor = new Player(this, x,y, sprite, speed);
+
 
         if(actor === null)
             return;
@@ -50,6 +55,14 @@ export class Game{
         this._actors.push(actor);
         return actor;
     };
+
+    destroyActor(index: number){
+        if(index < 0 || index >= this._actors.length)
+            return;
+
+        this._actors[index].destroy();
+        this._actors.splice(index, 1);
+    }
 
     update(){
         this.handleKeyboard();
@@ -60,12 +73,28 @@ export class Game{
 
         this._nextSpawn -= deltaTime;
         if(this._nextSpawn <= 0.0){
-            this._nextSpawn = 8.0 + Math.random() * 12.0;
-            this.spawnActor('Enemy', this._renderer.width * 1.2, Math.random()*this._renderer.height, SpriteFactory.for('zombie', -0.25, 0.25), new Vector2D(-1, 0));
+            this._nextSpawn = 10.0 + Math.random() * 15.0;
+            this.spawnActor('Enemy', this._renderer.width * 1.2, Math.random()*this._renderer.height, SpriteFactory.for('soldier', 0.5, 0.5), new Vector2D(-1, 0));
         }
 
         for(var i=0; i<this._actors.length; i++){
             this._actors[i].update(deltaTime);
+
+            // collisions right after an update
+            for(var j=0; j<this._actors.length; j++){
+                if(j === i)
+                    continue;
+
+                if(this._actors[j].collidesWith(this._actors[i])){
+                    if(this._actors[j] instanceof Player){
+                        (this._actors[j] as Player).hit();
+                    }
+                }
+            }
+
+            // cleanup
+            if(this._actors[i].getPosition().x <= -300 || this._actors[i].getPosition().x >= this._renderer.width + 300)
+                this.destroyActor(i);
         }
     };
 
@@ -78,6 +107,9 @@ export class Game{
         }
         if(this._keyboard.getState(Keyboard.Down)){
             this._player.move(new Vector2D(0,4));
+        }
+        if(this._keyboard.getState(Keyboard.Space)){
+            this._player.shoot();
         }
     }
 
