@@ -1,11 +1,13 @@
 import { SpriteFactory } from './SpriteFactory';
 import { MovingActor } from './MovingActor';
 import { Vector2D } from './Vector2D';
+import { Bullet } from "./Bullet";
 
 
 export class Enemy extends MovingActor{
 
     nextShoot: number = 1;
+    health: number = 3;
 
     constructor(game: any, x: number, y: number, sprite: PIXI.Sprite, movingSpeed: Vector2D){
         super(game, x,y, sprite, movingSpeed);
@@ -31,6 +33,15 @@ export class Enemy extends MovingActor{
         direction.x *= 2.0;
         direction.y *= 2.0;
 
-        this._game.spawnActor('MovingActor', this._position.x, this._position.y, SpriteFactory.for('bullet', 0.03, 0.03), direction);
+        let bullet = this._game.spawnActor('Bullet', this._position.x, this._position.y, SpriteFactory.for('bullet', 0.03, 0.03), direction) as Bullet;
+        bullet.setFriendly(false);
+    }
+
+    hit(){
+        this.health--;
+    }
+
+    isDead(){
+        return (this.health <= 0);
     }
 }

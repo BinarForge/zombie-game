@@ -5,6 +5,7 @@ import { MovingActor } from './components/MovingActor';
 import { Enemy } from './components/Enemy';
 import { Keyboard } from './components/Keyboard';
 import { Player } from "./components/Player";
+import { Bullet } from "./components/Bullet";
 
 
 export class Game{
@@ -16,6 +17,9 @@ export class Game{
     
     _nextSpawn = 1.0;
     _keyboard: Keyboard;
+
+    _health: PIXI.Text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 16, fill : 0x10ff10, align : 'center'});
+    _gameOver: boolean = false;
 
     constructor(gameContainerId: string, resX: number, resY: number){
 
@@ -35,6 +39,9 @@ export class Game{
 
         this._player = this.spawnActor('Player',70, 250, SpriteFactory.for('zombie', 0.25, 0.25), new Vector2D(0,0)) as Player;
 
+        this._stage.addChild(this._health);
+        this._health.position = new PIXI.Point(50, 50);
+
         this.update();
     };
 
@@ -47,6 +54,8 @@ export class Game{
             actor = new Enemy(this, x,y, sprite, speed);    
         else if(type === 'Player')
             actor = new Player(this, x,y, sprite, speed);
+        else if(type === 'Bullet')
+            actor = new Bullet(this, x,y, sprite, speed, false);
 
 
         if(actor === null)
@@ -65,6 +74,9 @@ export class Game{
     }
 
     update(){
+        if(this._gameOver)
+            return;
+
         this.handleKeyboard();
         const deltaTime = 0.05;
 
@@ -85,18 +97,42 @@ export class Game{
                 if(j === i)
                     continue;
 
-                if(this._actors[j].collidesWith(this._actors[i])){
-                    if(this._actors[j] instanceof Player){
+                if(this._actors[j] !== null && this._actors[j].collidesWith(this._actors[i])){
+                    if(this._actors[j] instanceof Player && this._actors[i] instanceof Bullet && !(this._actors[i] as Bullet).isFriendly()){
                         (this._actors[j] as Player).hit();
+                        this.destroyActor(i);
+                    }
+                    else if(this._actors[j] instanceof Enemy && this._actors[i] instanceof Bullet && (this._actors[i] as Bullet).isFriendly()){
+                        let enemy = (this._actors[j] as Enemy);
+                        enemy.hit();
+                        this.destroyActor(i);
+
+                        if(enemy.isDead())
+                            this.destroyActor(j);
                     }
                 }
             }
 
+            // gui
+            this._health.text = 'Health: ' + this._player.getHealth().toString();
+
+            if(this._player.isDead())
+                this.finishGame();
+            
             // cleanup
             if(this._actors[i].getPosition().x <= -300 || this._actors[i].getPosition().x >= this._renderer.width + 300)
                 this.destroyActor(i);
         }
-    };
+    }
+
+    finishGame(){
+        this._gameOver = true;
+
+        let gameOver = new PIXI.Text('Game Over!',{fontFamily : 'Arial', fontSize: 32, fill : 0xff1010, align : 'center'});
+        gameOver.position = new PIXI.Point(this._renderer.width*0.5, this._renderer.height*0.5);
+        this._stage.addChild(gameOver);
+        this._renderer.render(this._stage);
+    }
 
     handleKeyboard(){
         if(this._keyboard.getState(Keyboard.Space)){
