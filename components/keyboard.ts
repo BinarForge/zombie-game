@@ -1,51 +1,26 @@
-/// <reference path="../node_modules/@types/pixi.js/index.d.ts" />
+export class Keyboard{
 
-interface IKey{
-  code: number;
-  isDown: boolean;
-  isUp: boolean;
-  press: () => void;
-  release: () => void;
-  downHandler: () => void;
-  upHandler: () => void;
-}
+  public static Space = 32;
+  public static Up = 38;
+  public static Down = 40;
 
-export function keyboard(keyCode: number): IKey {
-  var key: IKey = {
-    code: keyCode,
-    isDown: false,
-    isUp: true,
-    press: undefined,
-    release: undefined,
-    downHandler: undefined,
-    upHandler: undefined
-  };
-  //The `downHandler`
-  var downHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isUp && key.press) key.press();
-      key.isDown = true;
-      key.isUp = false;
-    }
-    event.preventDefault();
-  };
+  _keyState: { [key: number] : boolean; } = {};
 
-  //The `upHandler`
-  var upHandler = function(event) {
-    if (event.keyCode === key.code) {
-      if (key.isDown && key.release) key.release();
-      key.isDown = false;
-      key.isUp = true;
-    }
-    event.preventDefault();
-  };
+  constructor(){
+    this._keyState = {};
+    window.addEventListener("keydown", this.downHandler.bind(this), false);
+    window.addEventListener("keyup", this.upHandler.bind(this), false);
+  }
 
-  //Attach event listeners
-  window.addEventListener(
-    "keydown", downHandler.bind(key), false
-  );
-  window.addEventListener(
-    "keyup", upHandler.bind(key), false
-  );
-  return key;
+  protected downHandler(e){
+    this._keyState[e.keyCode] = true;
+  }
+
+  protected upHandler(e){
+    this._keyState[e.keyCode] = false;
+  }
+
+  public getState(key: number): boolean{
+    return this._keyState[key];
+  }
 }

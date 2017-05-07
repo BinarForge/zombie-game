@@ -3,7 +3,7 @@ import { SpriteFactory } from './components/SpriteFactory';
 import { Vector2D } from './components/Vector2D';
 import { MovingActor } from './components/MovingActor';
 import { Enemy } from './components/Enemy';
-import { keyboard } from './components/keyboard';
+import { Keyboard } from './components/Keyboard';
 
 
 export class Game{
@@ -14,8 +14,11 @@ export class Game{
     _player: MovingActor;
     
     _nextSpawn = 1.0;
+    _keyboard: Keyboard;
 
     constructor(gameContainerId: string, resX: number, resY: number){
+
+        this._keyboard = new Keyboard();
         this._stage = new PIXI.Container();
         this._renderer = PIXI.autoDetectRenderer(
             resX,
@@ -49,6 +52,7 @@ export class Game{
     };
 
     update(){
+        this.handleKeyboard();
         const deltaTime = 0.05;
 
         this._renderer.render(this._stage);
@@ -64,6 +68,18 @@ export class Game{
             this._actors[i].update(deltaTime);
         }
     };
+
+    handleKeyboard(){
+        if(this._keyboard.getState(Keyboard.Space)){
+            
+        }
+        if(this._keyboard.getState(Keyboard.Up)){
+            this._player.move(new Vector2D(0,-4));
+        }
+        if(this._keyboard.getState(Keyboard.Down)){
+            this._player.move(new Vector2D(0,4));
+        }
+    }
 
     getStage(): PIXI.Container { return this._stage; };
 

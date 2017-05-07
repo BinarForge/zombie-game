@@ -45,6 +45,11 @@ export class MovingActor{
 
         this.debug();
     }
+
+    move(translation: Vector2D){
+        this._position.x += translation.x;
+        this._position.y += translation.y;
+    }
     
     updateSprite(){
         this._sprite.position = new PIXI.Point(this._position.x, this._position.y);
