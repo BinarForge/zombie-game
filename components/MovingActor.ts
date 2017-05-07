@@ -48,7 +48,8 @@ export class MovingActor{
         this.updateRectangle();
         this.updateSprite();
 
-        this.debug();
+        if(this._game.isDebugMode())
+            this.debug();
     }
 
     move(translation: Vector2D){

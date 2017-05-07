@@ -3,6 +3,8 @@ export class Keyboard{
   public static Space = 32;
   public static Up = 38;
   public static Down = 40;
+  public static Left = 37;
+  public static Right = 39;
 
   _keyState: { [key: number] : boolean; } = {};
 

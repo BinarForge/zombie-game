@@ -8,7 +8,8 @@ import { Player } from "./components/Player";
 import { Bullet } from "./components/Bullet";
 
 
-export class Game{
+export class Game {
+    _isDebug: boolean = false;
     _renderer: PIXI.SystemRenderer;
     _stage: PIXI.Container;
 
@@ -125,7 +126,11 @@ export class Game{
         }
     }
 
-    finishGame(){
+    isDebugMode(): boolean{
+        return this._isDebug;
+    }
+
+    finishGame(): void{
         this._gameOver = true;
 
         let gameOver = new PIXI.Text('Game Over!',{fontFamily : 'Arial', fontSize: 32, fill : 0xff1010, align : 'center'});
@@ -138,11 +143,17 @@ export class Game{
         if(this._keyboard.getState(Keyboard.Space)){
             
         }
-        if(this._keyboard.getState(Keyboard.Up)){
+        if(this._keyboard.getState(Keyboard.Up) && this._player.getPosition().y >= 10){
             this._player.move(new Vector2D(0,-4));
         }
-        if(this._keyboard.getState(Keyboard.Down)){
+        if(this._keyboard.getState(Keyboard.Down) && this._player.getPosition().y <= this._renderer.height - 50){
             this._player.move(new Vector2D(0,4));
+        }
+        if(this._keyboard.getState(Keyboard.Left) && this._player.getPosition().x >= 10){
+            this._player.move(new Vector2D(-4,0));
+        }
+        if(this._keyboard.getState(Keyboard.Right) && this._player.getPosition().x <= this._renderer.width - 10){
+            this._player.move(new Vector2D(4,0));
         }
         if(this._keyboard.getState(Keyboard.Space)){
             this._player.shoot();
