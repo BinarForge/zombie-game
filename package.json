@@ -4,8 +4,9 @@
   "description": "zombie-themed html5 game using pixi.js",
   "main": "game.js",
   "scripts": {
+    "tsc": "./node_modules/typescript/bin/tsc -p tsconfig.json",
     "test": "node node_modules\\mocha\\bin\\mocha ./test",
-    "bundle": "tsc && node node_modules\\webpack\\bin\\webpack.js"
+    "bundle": "npm run tsc && node ./node_modules/webpack/bin/webpack.js"
   },
   "repository": {
     "type": "git",
@@ -25,11 +26,12 @@
   },
   "homepage": "https://github.com/BinarForge/zombie-game#readme",
   "dependencies": {
-    "mocha": "^3.3.0",
-    "pixi.js": "^4.5.1",
-    "webpack": "^2.4.1"
+    "pixi.js": "^4.5.1"
   },
   "devDependencies": {
-    "@types/pixi.js": "^4.4.4"
+    "@types/pixi.js": "^4.4.4",
+    "mocha": "^3.3.0",
+    "typescript": "^2.4.2",
+    "webpack": "^2.4.1"
   }
 }
